@@ -8,17 +8,6 @@ class TaskManager:
         self.tasks: list = []
         self.filename = filename
 
-    def save_to_json(self):
-        """Сохраняет задачи в файл JSON."""
-        try:
-            with open(self.filename, "w", encoding="utf-8") as file:
-                json.dump(
-                    [task.to_dict() for task in self.tasks], file,
-                    ensure_ascii=False, indent=4
-                )
-        except IOError as err:
-            raise IOError(f"Ошибка в {self.filename}: {err}")
-
     def add_task(self, task):
         """Добавление задачи."""
         self.tasks.append(task)
@@ -28,7 +17,7 @@ class TaskManager:
         self.tasks = [task for task in self.tasks if task.id != task_id]
         self.tasks = [task for task in self.tasks if task.category != category]
 
-    def find_tasks(self, keyword: str = None, category: str = None, status: str = None):
+    def find_tasks(self, keyword=None, category=None, status=None):
         """Ищет задачи по ключевому слову, категории или статусу."""
         return [
             task for task in self.tasks
@@ -49,3 +38,14 @@ class TaskManager:
                         setattr(task, key, value)
                 return
         raise ValueError(f"Задача с ID {task_id} не найдена.")
+
+    def save_to_json(self):
+        """Сохраняет задачи в файл JSON."""
+        try:
+            with open(self.filename, "w", encoding="utf-8") as file:
+                json.dump(
+                    [task.to_dict() for task in self.tasks], file,
+                    ensure_ascii=False, indent=4
+                )
+        except IOError as err:
+            raise IOError(f"Ошибка в {self.filename}: {err}")
